@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
 from config import config
-from .views.v1 import v1
+# from views.error import *
+from views.v1 import v1
 
 
 def create_app():

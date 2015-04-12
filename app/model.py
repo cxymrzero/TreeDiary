@@ -3,6 +3,7 @@
 from sqlalchemy import Column, create_engine
 from sqlalchemy import String, Integer, Enum, DateTime, SmallInteger
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from config import config
 from datetime import datetime
 
@@ -18,15 +19,21 @@ class Sns(Base):
     sns_type = Column(Enum('1', '2', '3'), nullable=False)  # 1: weibo, 2: QQ, 3: weixin
     nickname = Column(String(64), nullable=False)
     head_url = Column(String(256), nullable=False)
+    open_id = Column(String(64), nullable=False)  # TODO：确认open_id类型
     create_time = Column(DateTime, nullable=False)
 
-    def __init__(self, sns_type, uid, nickname, head_url):
+    def __init__(self, sns_type, nickname, head_url, open_id):
         self.sns_type = sns_type
-        self.uid = uid
         self.nickname = nickname
         self.head_url = head_url
-        self.create_time = datetime.strftime(config.TIME_FORMAT_STR)
+        self.open_id = open_id
+        self.create_time = datetime.now()
 
+    def data(self):
+        return dict(sns_id=self.id, sns_type=self.sns_type,
+                    sns_nickname=self.nickname, sns_head_url=self.head_url,
+                    sns_create_time=self.create_time.strftime(config.TIME_FORMAT_STR)
+                    )
 
 class Status(Base):
     __tablename__ = 'status'
@@ -37,7 +44,7 @@ class Status(Base):
 
     def __init__(self, content, pic_num):
         self.content = content
-        self.pub_time = datetime.strftime(config.TIME_FORMAT_STR)
+        self.pub_time = datetime.now()
         self.pic_num = 0
 
 
@@ -48,6 +55,19 @@ class Img(Base):
 
     def __init__(self, img_url):
         self.img_url = img_url
+
+
+class Model():
+    def __init__(self):
+        session = sessionmaker(bind=engine)
+        self.session = session()
+
+    def add_sns(self, sns_type, nickname, head_url, open_id):
+        new_sns_data = Sns(sns_type, nickname, head_url, open_id)
+        # TODO: 判断open_id是否存在
+        self.session.add(new_sns_data)
+        self.session.commit()
+        return new_sns_data
 
 
 def init_db():
