@@ -11,7 +11,7 @@ class DevConfig(Config):
     MYSQL_CONN = 'mysql+mysqldb://root:jimchen@localhost:3306/tree?charset=utf8'
 
 class ProductConfig(Config):
-    MYSQL_CONN = 'mysql+mysqldb://root:Hustonline87542701:3306/tree?charset=utf8'
+    MYSQL_CONN = 'mysql+mysqldb://root:Hustonline87542701@localhost:3306/tree?charset=utf8'
 
 
 user = environ.get('USER')
