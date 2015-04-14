@@ -9,8 +9,8 @@ from functools import wraps
 
 def to_json(data, success=False):
     if success:
-        return jsonify({'data': {'msg': data}, 'status': 'ok'})
-    return jsonify({'msg': data, 'status': 'fail'})
+        return jsonify({'data': data, 'status': 'ok'})
+    return jsonify({'data': {'msg': data}, 'status': 'fail'})
 
 
 def gen_token(uid, expiration=31*24*60*60):
