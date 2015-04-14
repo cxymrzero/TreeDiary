@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, request
 from ..model import Model
-from ..utils.util import to_json, gen_token
+from ..utils.util import to_json, gen_token, token_required
+from werkzeug.utils import secure_filename
 
 
 v1 = Blueprint('v1', __name__)
@@ -21,9 +22,10 @@ def get_data_from_sns():
     sns_type = request.form['sns_type']
     nickname = request.form['nickname']
     head_url = request.form['head_url']
+    open_id = request.form['open_id']
 
     model = Model()
-    new_sns_data = model.add_sns(sns_type, nickname, head_url)
+    new_sns_data = model.add_sns(sns_type, nickname, head_url, open_id)
 
     if new_sns_data:
         data = new_sns_data.data()
@@ -32,3 +34,10 @@ def get_data_from_sns():
         return to_json(data, success=True)
     else:
         return to_json('sns login error')
+
+
+@v1.route('/status', methods=['POST'])
+@token_required
+def publish_status(user_id):
+    data = {'uid': user_id}
+    return to_json(data)
