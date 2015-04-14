@@ -59,6 +59,17 @@ class Img(Base):
         self.img_url = img_url
 
 
+class UserDetail(Base):
+    __tablename__ = 'user_detail'
+    id = Column(Integer, primary_key=True)
+    sns_id = Column(Integer, nullable=False)
+    tree_level = Column(Integer, nullable=False)
+    plant_num = Column(Integer, nullable=False)
+    yellow = Column(Integer, nullable=False)
+    blue = Column(Integer, nullable=False)
+    green = Column(Integer, nullable=False)
+
+
 class Model():
     def __init__(self):
         session = sessionmaker(bind=engine)
