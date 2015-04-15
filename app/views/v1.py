@@ -1,9 +1,8 @@
 # Created by cxy on 15/4/9 with PyCharm
 # -*- coding: utf-8 -*-
 from flask import Blueprint, request, abort
-from ..model import Model
+from ..model import Model, Img
 from ..utils.util import to_json, gen_token, token_required, is_params_ok
-from werkzeug.utils import secure_filename
 
 
 v1 = Blueprint('v1', __name__)
@@ -38,8 +37,47 @@ def get_data_from_sns():
         return to_json('sns login error')
 
 
-@v1.route('/status/', methods=['POST'])
+@v1.route('/status/text/', methods=['POST'])
+@token_required
+def publish_text_status(user_id):
+    content = request.form.get('content')
+    if not is_params_ok(content):
+        abort(400)
+
+    model = Model()
+    new_status = model.add_text_status(content)
+    if new_status:
+        data = {'status_id': new_status.id}
+        return to_json(data, success=True)
+    return to_json('oops, an error occurred')
+
+
+@v1.route('/status/mix/', methods=['POST'])
 @token_required
 def publish_status(user_id):
-    data = {'uid': user_id}
-    return to_json(data)
+    pic_num = request.form.get('pic_num')
+    content = request.form.get('content')
+    pic_urls = request.form.get('pic_urls')
+    if not is_params_ok(pic_num, content, pic_urls):
+        abort(400)
+    pic_num = int(pic_num)
+
+    # 使用']'分割url
+    pic_urls = pic_urls.strip(']')
+    pic_url_list = pic_urls.split(']')
+    if len(pic_url_list) != pic_num:
+        print pic_url_list
+        return to_json('pic url error')
+
+    model = Model()
+    pic_ids = []
+    for pic_url in pic_url_list:
+        img = Img(pic_url)
+        model.session.add(img)
+        model.session.commit()
+        pic_ids.append(img.id)
+
+    pic_id_str = ','.join(map(str, pic_ids))
+    status = model.add_mix_status(content, pic_num, pic_id_str)
+    data = dict(status_id=status.id)
+    return to_json(data, success=True)

@@ -43,11 +43,13 @@ class Status(Base):
     content = Column(String(500), nullable=False)
     pub_time = Column(DateTime, nullable=False)
     pic_num = Column(SmallInteger, nullable=False, default=0)
+    pic_ids = Column(String(120), nullable=False)
 
-    def __init__(self, content, pic_num):
+    def __init__(self, content, pic_num, pic_ids):
         self.content = content
         self.pub_time = datetime.now()
         self.pic_num = pic_num
+        self.pic_ids = pic_ids
 
 
 class Img(Base):
@@ -83,6 +85,18 @@ class Model():
         self.session.add(new_sns_data)
         self.session.commit()
         return new_sns_data
+
+    def add_text_status(self, content):
+        text_status = Status(content, 0, "")
+        self.session.add(text_status)
+        self.session.commit()
+        return text_status
+
+    def add_mix_status(self, content, pic_num, pic_ids):
+        mix_status = Status(content, pic_num, pic_ids)
+        self.session.add(mix_status)
+        self.session.commit()
+        return mix_status
 
 
 def init_db():

@@ -26,7 +26,7 @@ CREATE TABLE `img` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `img_url` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,6 +35,7 @@ CREATE TABLE `img` (
 
 LOCK TABLES `img` WRITE;
 /*!40000 ALTER TABLE `img` DISABLE KEYS */;
+INSERT INTO `img` VALUES (1,'abc'),(2,'def');
 /*!40000 ALTER TABLE `img` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -53,7 +54,7 @@ CREATE TABLE `sns` (
   `open_id` varchar(64) NOT NULL,
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,6 +63,7 @@ CREATE TABLE `sns` (
 
 LOCK TABLES `sns` WRITE;
 /*!40000 ALTER TABLE `sns` DISABLE KEYS */;
+INSERT INTO `sns` VALUES (1,'1','abc','http://www.baidu.com','123','2015-04-15 17:19:14');
 /*!40000 ALTER TABLE `sns` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,8 +79,9 @@ CREATE TABLE `status` (
   `content` varchar(500) NOT NULL,
   `pub_time` datetime NOT NULL,
   `pic_num` smallint(6) NOT NULL,
+  `pic_ids` varchar(120) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,6 +90,7 @@ CREATE TABLE `status` (
 
 LOCK TABLES `status` WRITE;
 /*!40000 ALTER TABLE `status` DISABLE KEYS */;
+INSERT INTO `status` VALUES (1,'abcd','2015-04-15 17:19:49',0,''),(2,'abcd','2015-04-15 17:21:14',0,''),(3,'abcd','2015-04-15 17:23:55',2,'1,2');
 /*!40000 ALTER TABLE `status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,4 +131,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-14 19:50:09
+-- Dump completed on 2015-04-15 17:25:49

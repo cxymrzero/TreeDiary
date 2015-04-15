@@ -29,7 +29,7 @@ def token_required(func):
             return to_json('expired token')
         except BadSignature:
             return to_json('useless token')
-        kwargs['user_id'] = data.id
+        kwargs['user_id'] = data['id']
         return func(*args, **kwargs)
     return wrapper
 
