@@ -41,11 +41,12 @@ def get_data_from_sns():
 @token_required
 def publish_text_status(user_id):
     content = request.form.get('content')
-    if not is_params_ok(content):
+    status_type = request.form.get('status_type')
+    if not is_params_ok(content, status_type):
         abort(400)
 
     model = Model()
-    new_status = model.add_text_status(content)
+    new_status = model.add_text_status(content, status_type)
     if new_status:
         data = {'status_id': new_status.id}
         return to_json(data, success=True)
@@ -58,7 +59,8 @@ def publish_status(user_id):
     pic_num = request.form.get('pic_num')
     content = request.form.get('content')
     pic_urls = request.form.get('pic_urls')
-    if not is_params_ok(pic_num, content, pic_urls):
+    status_type = request.form.get('status_type')
+    if not is_params_ok(pic_num, content, pic_urls, status_type):
         abort(400)
     pic_num = int(pic_num)
 
@@ -78,6 +80,6 @@ def publish_status(user_id):
         pic_ids.append(img.id)
 
     pic_id_str = ','.join(map(str, pic_ids))
-    status = model.add_mix_status(content, pic_num, pic_id_str)
+    status = model.add_mix_status(content, pic_num, pic_id_str, status_type)
     data = dict(status_id=status.id)
     return to_json(data, success=True)

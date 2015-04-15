@@ -41,15 +41,17 @@ class Status(Base):
     __tablename__ = 'status'
     id = Column(Integer, primary_key=True)
     content = Column(String(500), nullable=False)
+    status_type = Enum('1', '2', '3')  # 1: blue 2: yellow 3: green
     pub_time = Column(DateTime, nullable=False)
     pic_num = Column(SmallInteger, nullable=False, default=0)
     pic_ids = Column(String(120), nullable=False)
 
-    def __init__(self, content, pic_num, pic_ids):
+    def __init__(self, content, pic_num, pic_ids, status_type):
         self.content = content
         self.pub_time = datetime.now()
         self.pic_num = pic_num
         self.pic_ids = pic_ids
+        self.status_type = status_type
 
 
 class Img(Base):
@@ -86,14 +88,14 @@ class Model():
         self.session.commit()
         return new_sns_data
 
-    def add_text_status(self, content):
-        text_status = Status(content, 0, "")
+    def add_text_status(self, content, status_type):
+        text_status = Status(content, 0, "", status_type)
         self.session.add(text_status)
         self.session.commit()
         return text_status
 
-    def add_mix_status(self, content, pic_num, pic_ids):
-        mix_status = Status(content, pic_num, pic_ids)
+    def add_mix_status(self, content, pic_num, pic_ids, status_type):
+        mix_status = Status(content, pic_num, pic_ids, status_type)
         self.session.add(mix_status)
         self.session.commit()
         return mix_status
