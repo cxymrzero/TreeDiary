@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from app import app
 from app.views import v1
+from app.views import qtoken
 from app.views.error import *
 
 
