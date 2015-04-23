@@ -39,13 +39,13 @@ def is_params_ok(*args):
     检查传入的参数中是否有空参数
     """
     for arg in args:
-        if not arg:
+        if arg is None:
             return False
     return True
 
 
 def is_file_a_pic(filename):
-    allowed_file_ext = 'png', 'jpg','jpeg', 'gif'
+    allowed_file_ext = 'png', 'jpg', 'jpeg', 'gif'
     ext = filename.split('.')[-1]
     if ext not in allowed_file_ext:
         return False
