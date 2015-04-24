@@ -22,6 +22,8 @@ def token_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         token = request.form.get('token')
+        if token is None:
+            return to_json('token required')
         s = Serializer(config.SECRET_KEY)
         try:
             data = s.loads(token)
@@ -29,7 +31,7 @@ def token_required(func):
             return to_json('expired token')
         except BadSignature:
             return to_json('useless token')
-        kwargs['user_id'] = data['id']
+        kwargs['uid'] = data['id']
         return func(*args, **kwargs)
     return wrapper
 

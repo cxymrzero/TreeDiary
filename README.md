@@ -37,3 +37,23 @@ TreeDiary API文档
     "pic_urls"
 - 返回值:
     "status_id"
+    
+## v2
+### 使用SNS登录
+- POST /api/v2/snsLogin/
+- sns_type(1:微博 2:QQ 3:微信), nickname, head_url, open_id
+- 返回值:
+    "token"(是后面用户认证的凭证)
+    
+### 发状态
+- POST /api/v2/status/
+- token, status_type(1:yellow 2:green 3:red), text, pic_url_str(将图片链接以']'分隔拼接起来),
+    has_pic(1或0), pic_num
+- 返回值:
+    "status_id"一个字符串
+    
+### 修改用户信息
+- PATCH /api/v2/user/
+- token, token, yellow, green, blue, level, 除token外其余可选
+- 返回值:
+    空字符串
