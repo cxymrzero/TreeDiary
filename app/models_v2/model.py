@@ -50,6 +50,14 @@ class Status:
         )
         return self.c.insert(pic_status)
 
+    def delete_status(self, status_id, uid):
+        query = {'_id': status_id, 'uid': uid}
+
+        if not self.c.find_one(query):
+            return False
+        self.c.remove(query)
+        return True
+
 
 class User:
     def __init__(self, db):

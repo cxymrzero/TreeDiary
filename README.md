@@ -52,6 +52,12 @@ TreeDiary API文档
 - 返回值:
     "status_id"一个字符串
     
+### 删除状态
+- DELETE /api/v2/status/<status_id>/
+- token
+- 返回值:
+    空字符串或"status not exist"
+    
 ### 修改用户信息
 - PATCH /api/v2/user/
 - token, token, yellow, green, blue, level, 除token外其余可选
