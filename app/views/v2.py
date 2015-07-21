@@ -55,47 +55,53 @@ def sns_login():
     return to_json(data, True)
 
 
-@v2.route('/status/', methods=['POST', 'DELETE'])
+@v2.route('/status/', methods=['POST', 'GET'])
 @token_required
 def publish_status(uid):
-    status_type = request.form.get('status_type')
-    text = request.form.get('text')
-    pic_url_str = request.form.get('pic_url_str')
-    has_pic = request.form.get('has_pic')
-    pic_num = request.form.get('pic_num')
-    if not is_params_ok(status_type, text, pic_url_str,
-                        has_pic, pic_num):
-        abort(400)
+    if request.method == 'GET':
+        f = request.args.get('from')
+        limit = request.args.get('limit')
+        pass
 
-    uid = ObjectId(uid)
+    if request.method == 'POST':
+        status_type = request.form.get('status_type')
+        text = request.form.get('text')
+        pic_url_str = request.form.get('pic_url_str')
+        has_pic = request.form.get('has_pic')
+        pic_num = request.form.get('pic_num')
+        if not is_params_ok(status_type, text, pic_url_str,
+                            has_pic, pic_num):
+            abort(400)
 
-    if status_type not in ('1', '2', '3'):  # 1: blue 2: yellow 3: green
-        return to_json('status type code error')
-    if has_pic not in ('1', '0'):
-        return to_json('has pic code error')
-    if len(text) > 500:
-        return to_json('status text too long')
+        uid = ObjectId(uid)
 
-    status_model = Status(g.db)
-    # 纯文字状态
-    if has_pic == '0':
-        if str(pic_num) != '0':
-            return to_json('pic num error')
-        status_id = status_model.add_text_status(text, status_type, uid)
-        status_id = str(status_id)
-        res = {'status_id': status_id}
-        return to_json(res, success=True)
+        if status_type not in ('1', '2', '3'):  # 1: blue 2: yellow 3: green
+            return to_json('status type code error')
+        if has_pic not in ('1', '0'):
+            return to_json('has pic code error')
+        if len(text) > 500:
+            return to_json('status text too long')
 
-    if has_pic == '1':
-        # 使用']'分割url
-        pic_url_str = pic_url_str.strip(']')
-        pic_url_list = pic_url_str.split(']')
-        if len(pic_url_list) != int(pic_num):
-            return to_json('pic num error')
-        status_id = status_model.add_pic_status(text, status_type, pic_url_list, pic_num, uid)
-        status_id = str(status_id)
-        res = {'status_id': status_id}
-        return to_json(res, success=True)
+        status_model = Status(g.db)
+        # 纯文字状态
+        if has_pic == '0':
+            if str(pic_num) != '0':
+                return to_json('pic num error')
+            status_id = status_model.add_text_status(text, status_type, uid)
+            status_id = str(status_id)
+            res = {'status_id': status_id}
+            return to_json(res, success=True)
+
+        if has_pic == '1':
+            # 使用']'分割url
+            pic_url_str = pic_url_str.strip(']')
+            pic_url_list = pic_url_str.split(']')
+            if len(pic_url_list) != int(pic_num):
+                return to_json('pic num error')
+            status_id = status_model.add_pic_status(text, status_type, pic_url_list, pic_num, uid)
+            status_id = str(status_id)
+            res = {'status_id': status_id}
+            return to_json(res, success=True)
 
 
 @v2.route('/status/<status_id>/', methods=['DELETE'])

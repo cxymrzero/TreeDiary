@@ -1,5 +1,8 @@
 TreeDiary API文档
 ===
+## 说明
+森活记日记app后台，flask + MongoDB，RESTful API实践  
+
 ## 通用
 ### 获取七牛云token
 - GET /api/qtoken
